@@ -6,10 +6,11 @@ machine:
     DATABASE_TEST_URL: postgresql://ubuntu:@127.0.0.1:5432/circle_test
 
 dependencies:
-  pre:
-    - sudo pip install docker-compose
-    - docker-compose up -d --build
+  override:
+    - sudo pip install --upgrade docker-compose==1.11.2
 
 test:
+  pre:
+    - docker-compose up -d --build
   override:
     - docker-compose run users-service python manage.py test
