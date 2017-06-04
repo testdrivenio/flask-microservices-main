@@ -1,24 +1,15 @@
-sudo: required
+machine:
+  services:
+    - docker
+  environment:
+    APP_SETTINGS: project.config.TestingConfig
+    DATABASE_TEST_URL: postgresql://ubuntu:@127.0.0.1:5432/circle_test
 
-services:
-  - docker
+dependencies:
+  pre:
+    - sudo pip install docker-compose
+    - docker-compose up --build -d
 
-env:
-  DOCKER_COMPOSE_VERSION: 1.11.2
-
-before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
-before_script:
-  - export APP_SETTINGS=project.config.TestingConfig
- - export DATABASE_TEST_URL=postgres://postgres:postgres@localhost:5432/users_test
-  - docker-compose up --build -d
-
-script:
-  - docker-compose run users-service python manage.py test
-
-after_script:
-  - docker-compose down
+test:
+  override:
+    - docker-compose run users-service python manage.py test
