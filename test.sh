@@ -3,7 +3,7 @@
 fails=''
 
 inspect() {
-  if [[ $1 -ne 0 ]]; then
+  if [ $1 -ne 0 ]; then
     fails="${fails} $2"
   fi
 }
@@ -11,7 +11,7 @@ inspect() {
 docker-compose run users-service python manage.py test
 inspect $? users-service
 
-if [[ -n "${fails}" ]];
+if [ -n "${fails}" ];
   then
     echo "Tests failed: ${fails}"
     exit 1
