@@ -3,7 +3,8 @@ version: '2.1'
 services:
   users-db:
     container_name: users-db
-    build: https://github.com/realpython/flask-microservices-users.git#master:project/db
+    build:
+      context: ../flask-microservices-users/project/db
     ports:
         - 5435:5432  # expose ports - HOST:CONTAINER
     environment:
@@ -14,7 +15,8 @@ services:
 
   users-service:
     container_name: users-service
-    build: https://github.com/realpython/flask-microservices-users.git
+    build:
+      context: ../flask-microservices-users
     ports:
       - 5001:5000 # expose ports - HOST:CONTAINER
     environment:
@@ -46,7 +48,7 @@ services:
   web-service:
     container_name: web-service
     build:
-      context: https://github.com/realpython/flask-microservices-client.git
+      context: ../flask-microservices-client
       args:
         - NODE_ENV=development
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
