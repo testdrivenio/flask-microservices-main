@@ -26,6 +26,10 @@ test(`should display flash messages correctly`, async (t) => {
     .click(Selector('.alert > button'))
     .expect(Selector('.alert-success').withText('Welcome!').exists).notOk()
 
+  // log a user out
+  await t
+    .click(Selector('a').withText('Log Out'))
+
   // attempt to log in
   await t
     .navigateTo(`${TEST_URL}/login`)
@@ -51,6 +55,10 @@ test(`should display flash messages correctly`, async (t) => {
     .expect(Selector('.alert-success').withText('Welcome!').exists).ok()
     .expect(Selector('.alert-danger').withText(
       'User does not exist.').exists).notOk()
+
+  // log a user out
+  await t
+    .click(Selector('a').withText('Log Out'))
 
   // log a user in
   await t

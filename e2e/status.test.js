@@ -32,16 +32,9 @@ test(`should display user info if user is logged in`, async (t) => {
     .typeText('input[name="password"]', password)
     .click(Selector('input[type="submit"]'))
 
-  // log a user in
-  await t
-    .navigateTo(`${TEST_URL}/login`)
-    .typeText('input[name="email"]', email)
-    .typeText('input[name="password"]', password)
-    .click(Selector('input[type="submit"]'))
-
   // assert '/status' is displayed properly
   await t
-    .click(Selector('a').withText('User Status'))
+    .navigateTo(`${TEST_URL}/status`)
     .expect(Selector('li > strong').withText('User ID:').exists).ok()
     .expect(Selector('li > strong').withText('Email:').exists).ok()
     .expect(Selector('li').withText(email).exists).ok()
