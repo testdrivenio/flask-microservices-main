@@ -4,8 +4,9 @@ services:
 
   users-db:
     container_name: users-db
+    restart: always
     build:
-      context: ../flask-microservices-users/project/db
+      context: https://github.com/realpython/flask-microservices-users.git#master:project/db
     ports:
         - 5435:5432  # expose ports - HOST:CONTAINER
     environment:
@@ -16,23 +17,26 @@ services:
 
   users-service:
     container_name: users-service
+    restart: always
     build:
-      context: ../flask-microservices-users
-    ports:
-      - 5001:5000 # expose ports - HOST:CONTAINER
+      context: https://github.com/realpython/flask-microservices-users.git
+    expose:
+      - '5000'
     environment:
-      - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - APP_SETTINGS=project.config.StagingConfig
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_staging
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
-      - SECRET_KEY=my_precious
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       users-db:
         condition: service_healthy
     links:
       - users-db
+    command: gunicorn -b 0.0.0.0:5000 manage:app
 
   nginx:
     container_name: nginx
+    restart: always
     build: ./nginx/
     restart: always
     ports:
@@ -48,8 +52,9 @@ services:
 
   web-service:
     container_name: web-service
+    restart: always
     build:
-      context: ../flask-microservices-client
+      context: https://github.com/realpython/flask-microservices-client.git
       args:
         - NODE_ENV=development
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
@@ -63,8 +68,9 @@ services:
 
   swagger:
     container_name: swagger
+    restart: always
     build:
-      context: ../flask-microservices-swagger
+      context: https://github.com/realpython/flask-microservices-swagger.git
     ports:
       - '8080:8080' # expose ports - HOST:CONTAINER
     environment:
