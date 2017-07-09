@@ -37,7 +37,7 @@ before_script:
   - docker-compose -f docker-compose-staging.yml up -d --build
 
 script:
-  - docker-compose run users-service python manage.py test
+  - docker-compose -f docker-compose-staging.yml run users-service python manage.py test
   - testcafe chrome e2e/index.test.js
 
 after_script:
