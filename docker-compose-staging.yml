@@ -4,11 +4,10 @@ services:
 
   users-db:
     container_name: users-db
-    restart: always
     build:
       context: https://github.com/realpython/flask-microservices-users.git#master:project/db
     ports:
-        - 5435:5432  # expose ports - HOST:CONTAINER
+      - 5435:5432  # expose ports - HOST:CONTAINER
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -36,9 +35,7 @@ services:
 
   nginx:
     container_name: nginx
-    restart: always
     build: ./nginx/
-    restart: always
     ports:
       - 80:80
     depends_on:
@@ -52,7 +49,6 @@ services:
 
   web-service:
     container_name: web-service
-    restart: always
     build:
       context: https://github.com/realpython/flask-microservices-client.git
       args:
@@ -68,7 +64,6 @@ services:
 
   swagger:
     container_name: swagger
-    restart: always
     build:
       context: https://github.com/realpython/flask-microservices-swagger.git
     ports:

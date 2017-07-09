@@ -5,8 +5,10 @@ services:
   users-db:
     container_name: users-db
     build: https://github.com/realpython/flask-microservices-users.git#master:project/db
+    volumes:
+      - pgdata:/var/log/postgresql/data
     ports:
-        - 5435:5432  # expose ports - HOST:CONTAINER
+      - 5435:5432  # expose ports - HOST:CONTAINER
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -15,6 +17,7 @@ services:
 
   users-service:
     container_name: users-service
+    restart: always
     build: https://github.com/realpython/flask-microservices-users.git
     expose:
       - '5000'
@@ -59,3 +62,7 @@ services:
         condition: service_started
     links:
       - users-service
+
+  volumes:
+    pgdata:
+      driver: local

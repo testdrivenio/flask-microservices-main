@@ -18,7 +18,8 @@ services:
   - docker
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.11.2
+  global:
+    - DOCKER_COMPOSE_VERSION=1.11.2
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -29,13 +30,15 @@ before_install:
 before_script:
   - export TEST_URL=http://127.0.0.1
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
+  - export SECRET_KEY=my_precious
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - sleep 3
-  - docker-compose up --build -d
+  - docker-compose -f docker-compose-staging.yml up -d --build
 
 script:
-  - sh test.sh
+  - docker-compose run users-service python manage.py test
+  - testcafe chrome e2e/index.test.js
 
 after_script:
   - docker-compose down
