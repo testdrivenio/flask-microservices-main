@@ -53,11 +53,14 @@ services:
     container_name: web-service
     build:
       context: ../flask-microservices-client
-      args:
-        - NODE_ENV=development
-        - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+      dockerfile: Dockerfile-local
+    volumes:
+      - '../flask-microservices-client:/usr/src/app'
     ports:
       - '9000:9000' # expose ports - HOST:CONTAINER
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     depends_on:
       users-service:
         condition: service_started

@@ -16,7 +16,6 @@ services:
 
   users-service:
     container_name: users-service
-    restart: always
     build:
       context: https://github.com/realpython/flask-microservices-users.git
     expose:
@@ -36,6 +35,7 @@ services:
   nginx:
     container_name: nginx
     build: ./nginx/
+    restart: always
     ports:
       - 80:80
     depends_on:

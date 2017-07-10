@@ -15,7 +15,6 @@ services:
 
   users-service:
     container_name: users-service
-    restart: always
     build: https://github.com/realpython/flask-microservices-users.git
     expose:
       - '5000'
