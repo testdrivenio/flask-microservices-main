@@ -38,7 +38,7 @@ before_script:
 
 script:
   - docker-compose -f docker-compose-staging.yml run users-service python manage.py test
-  - testcafe chrome e2e
+  - testcafe chrome e2e/index.test.js
 
 after_script:
   - docker-compose down

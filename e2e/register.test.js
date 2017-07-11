@@ -5,7 +5,6 @@ const randomstring = require('randomstring');
 const username = randomstring.generate();
 const email = `${username}@test.com`;
 const password = 'greaterthanten';
-const currentDate = new Date();
 
 const TEST_URL = process.env.TEST_URL;
 
@@ -44,15 +43,6 @@ test(`should allow a user to register`, async (t) => {
     .expect(Selector('a').withText('Log Out').exists).ok()
     .expect(Selector('a').withText('Register').exists).notOk()
     .expect(Selector('a').withText('Log In').exists).notOk()
-
-  // assert date is correct
-  const createdDate = await tableRow.child('td').nth(3).innerText;
-  const formattedDate = new Date(createdDate)
-  await t
-    .expect(currentDate.getUTCMonth()).eql(formattedDate.getUTCMonth())
-    .expect(currentDate.getUTCDate()).eql(formattedDate.getUTCDate())
-    .expect(
-      currentDate.getUTCFullYear()).eql(formattedDate.getUTCFullYear())
 
 });
 
