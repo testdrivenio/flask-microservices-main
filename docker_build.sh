@@ -2,7 +2,7 @@
 
 echo "test"
 
-if [ $TRAVIS_BRANCH != "master"]; then
+if [ $TRAVIS_BRANCH != "master" ]; then
       echo "Building and pushing images..."
 fi
 
