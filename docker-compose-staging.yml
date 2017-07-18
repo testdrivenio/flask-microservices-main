@@ -4,6 +4,7 @@ services:
 
   users-db:
     container_name: users-db
+    image: realpython/flask-microservices-users_db
     build:
       context: https://github.com/realpython/flask-microservices-users.git#master:project/db
     ports:
@@ -16,8 +17,7 @@ services:
 
   users-service:
     container_name: users-service
-    build:
-      context: https://github.com/realpython/flask-microservices-users.git
+    image: realpython/flask-microservices-users
     expose:
       - '5000'
     environment:
@@ -33,8 +33,7 @@ services:
     command: gunicorn -b 0.0.0.0:5000 manage:app
 
   nginx:
-    container_name: nginx
-    build: ./nginx/
+    image: realpython/flask-microservices-nginx
     restart: always
     ports:
       - 80:80
@@ -49,11 +48,7 @@ services:
 
   web-service:
     container_name: web-service
-    build:
-      context: https://github.com/realpython/flask-microservices-client.git
-      args:
-        - NODE_ENV=development
-        - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+    image: realpython/flask-microservices-client
     ports:
       - '9000:9000' # expose ports - HOST:CONTAINER
     depends_on:
@@ -64,8 +59,7 @@ services:
 
   swagger:
     container_name: swagger
-    build:
-      context: https://github.com/realpython/flask-microservices-swagger.git
+    image: realpython/flask-microservices-swagger
     ports:
       - '8080:8080' # expose ports - HOST:CONTAINER
     environment:
