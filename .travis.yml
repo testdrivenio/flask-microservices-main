@@ -20,6 +20,17 @@ services:
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.11.2
+    - COMMIT=${TRAVIS_COMMIT::8}
+    - USERS=flask-microservices-users
+    - USERS_REPO=https://github.com/realpython/$USERS.git
+    - USERS_DB=flask-microservices-users_db
+    - USERS_DB_REPO=https://github.com/realpython/$USERS.git#master:project/db
+    - CLIENT=flask-microservices-client
+    - CLIENT_REPO=https://github.com/realpython/$CLIENT.git
+    - SWAGGER=flask-microservices-swagger
+    - SWAGGER_REPO=https://github.com/realpython/$SWAGGER.git
+    - NGINX=flask-microservices-nginx
+    - NGINX_REPO=https://github.com/realpython/flask-microservices-main.git#master:nginx
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -42,3 +53,6 @@ script:
 
 after_script:
   - docker-compose down
+
+after_success:
+  - bash ./docker_build.sh
