@@ -33,6 +33,7 @@ env:
     - NGINX_REPO=https://github.com/realpython/flask-microservices-main.git#master:nginx
 
 before_install:
+  - sh ./docker_build.sh
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
@@ -55,4 +56,4 @@ after_script:
   - docker-compose down
 
 after_success:
-  - ./docker_build.sh
+  - sh ./docker_build.sh
