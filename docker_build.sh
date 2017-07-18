@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo "test"
-
 if [ $TRAVIS_BRANCH == "master" ]; then
     docker login -e $DOCKER_EMAIL -u $DOCKER_ID -p $DOCKER_PASSWORD
     export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
