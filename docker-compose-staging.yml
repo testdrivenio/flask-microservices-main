@@ -48,10 +48,6 @@ services:
   web-service:
     container_name: web-service
     image: realpython/flask-microservices-client
-    build:
-      args:
-        - NODE_ENV=production
-        - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     ports:
       - '9000:9000' # expose ports - HOST:CONTAINER
     depends_on:

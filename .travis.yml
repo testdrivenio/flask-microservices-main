@@ -45,7 +45,7 @@ before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - sleep 3
-  - docker-compose -f docker-compose-ci.yml up -d --build
+  - bash ./docker_build.sh
 
 script:
   - docker-compose -f docker-compose-ci.yml run users-service python manage.py test
@@ -56,4 +56,4 @@ after_script:
   - docker-compose down
 
 after_success:
-  - bash ./docker_build.sh
+  - bash ./docker_deploy.sh
