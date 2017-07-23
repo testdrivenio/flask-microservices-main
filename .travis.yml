@@ -45,13 +45,13 @@ before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - sleep 3
-  - docker-compose -f docker-compose-staging.yml up -d --build
+  - docker-compose -f docker-compose-ci.yml up -d --build
 
 script:
-  - docker-compose -f docker-compose-staging.yml run users-service python manage.py test
-  - docker-compose -f docker-compose-staging.yml run users-service python manage.py recreate_db
+  - docker-compose -f docker-compose-ci.yml run users-service python manage.py test
+  - docker-compose -f docker-compose-ci.yml run users-service python manage.py recreate_db
   - testcafe chrome e2e
-  
+
 after_script:
   - docker-compose down
 
