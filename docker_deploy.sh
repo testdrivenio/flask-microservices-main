@@ -17,7 +17,9 @@ if [ "$TRAVIS_BRANCH" == "staging" ]; then
   export REPO=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
 fi
 
-if [ "$TRAVIS_BRANCH" == "development" || "$TRAVIS_BRANCH" == "staging"]; then
+if [ "$TRAVIS_BRANCH" == "development" ] || \
+   [ "$TRAVIS_BRANCH" == "staging" ]
+then
   # users
   docker build $USERS_REPO -t $USERS:$COMMIT
   docker tag $USERS:$COMMIT $REPO/$USERS:$TAG
