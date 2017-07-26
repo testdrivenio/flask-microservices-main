@@ -2,27 +2,8 @@
 
 if [ "$TRAVIS_BRANCH" == "development" ]; then
     docker login -e $DOCKER_EMAIL -u $DOCKER_ID -p $DOCKER_PASSWORD
-    export TAG="latest"
-    # users
-    docker build $USERS_REPO -t $USERS:$COMMIT
-    docker tag $USERS:$COMMIT $DOCKER_ID/$USERS:$TAG
-    docker push $DOCKER_ID/$USERS
-    # users db
-    docker build $USERS_DB_REPO -t $USERS_DB:$COMMIT
-    docker tag $USERS_DB:$COMMIT $DOCKER_ID/$USERS_DB:$TAG
-    docker push $DOCKER_ID/$USERS_DB
-    # client
-    docker build $CLIENT_REPO -t $CLIENT:$COMMIT
-    docker tag $CLIENT:$COMMIT $DOCKER_ID/$CLIENT:$TAG
-    docker push $DOCKER_ID/$CLIENT
-    # swagger
-    docker build $SWAGGER_REPO -t $SWAGGER:$COMMIT
-    docker tag $SWAGGER:$COMMIT $DOCKER_ID/$SWAGGER:$TAG
-    docker push $DOCKER_ID/$SWAGGER
-    # nginx
-    docker build $NGINX_REPO -t $NGINX:$COMMIT
-    docker tag $NGINX:$COMMIT $DOCKER_ID/$NGINX:$TAG
-    docker push $DOCKER_ID/$NGINX
+    export TAG="development"
+    export REPO=$DOCKER_ID
 fi
 
 if [ "$TRAVIS_BRANCH" == "staging" ]; then
@@ -32,25 +13,27 @@ if [ "$TRAVIS_BRANCH" == "staging" ]; then
     export PATH=~/bin:$PATH
     # add AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY env vars
     eval $(aws ecr get-login --region us-east-1)
-    export TAG="latest"
-    # users
-    docker build $USERS_REPO -t $USERS:$COMMIT
-    docker tag $USERS:$COMMIT $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$USERS:$TAG
-    docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$USERS:$TAG
-    # users db
-    docker build $USERS_DB_REPO -t $USERS_DB:$COMMIT
-    docker tag $USERS_DB:$COMMIT $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$USERS_DB:$TAG
-    docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$USERS_DB:$TAG
-    # client
-    docker build $CLIENT_REPO -t $CLIENT:$COMMIT
-    docker tag $CLIENT:$COMMIT $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$CLIENT:$TAG
-    docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$CLIENT:$TAG
-    # swagger
-    docker build $SWAGGER_REPO -t $SWAGGER:$COMMIT
-    docker tag $SWAGGER:$COMMIT $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$SWAGGER:$TAG
-    docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$SWAGGER:$TAG
-    # nginx
-    docker build $NGINX_REPO -t $NGINX:$COMMIT
-    docker tag $NGINX:$COMMIT $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$NGINX:$TAG
-    docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$NGINX:$TAG
+    export TAG="staging"
+    export REPO=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
 fi
+
+# users
+docker build $USERS_REPO -t $USERS:$COMMIT
+docker tag $USERS:$COMMIT $REPO/$USERS:$TAG
+docker push $REPO/$USERS:$TAG
+# users db
+docker build $USERS_DB_REPO -t $USERS_DB:$COMMIT
+docker tag $USERS_DB:$COMMIT $REPO/$USERS_DB:$TAG
+docker push $REPO/$USERS_DB:$TAG
+# client
+docker build $CLIENT_REPO -t $CLIENT:$COMMIT
+docker tag $CLIENT:$COMMIT $REPO/$CLIENT:$TAG
+docker push $REPO/$CLIENT:$TAG
+# swagger
+docker build $SWAGGER_REPO -t $SWAGGER:$COMMIT
+docker tag $SWAGGER:$COMMIT $REPO/$SWAGGER:$TAG
+docker push $REPO/$SWAGGER:$TAG
+# nginx
+docker build $NGINX_REPO -t $NGINX:$COMMIT
+docker tag $NGINX:$COMMIT $REPO/$NGINX:$TAG
+docker push $REPO/$NGINX:$TAG
