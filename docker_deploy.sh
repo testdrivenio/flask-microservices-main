@@ -26,6 +26,10 @@ if [ "$TRAVIS_BRANCH" == "development" ]; then
 fi
 
 if [ "$TRAVIS_BRANCH" == "staging" ]; then
+    curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+    unzip awscli-bundle.zip
+    ./awscli-bundle/install -b ~/bin/aws
+    export PATH=~/bin:$PATH
     # add AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY env vars
     eval $(aws ecr get-login --region us-east-1)
     export TAG="latest"
