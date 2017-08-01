@@ -1,8 +1,8 @@
 {
   "containerDefinitions": [
     {
-      "name": "learn",
-      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/learn:users:staging",
+      "name": "users",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/users:staging",
       "essential": true,
       "memoryReservation": 300,
       "cpu": 300,
