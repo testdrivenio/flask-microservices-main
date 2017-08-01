@@ -6,6 +6,13 @@ then
   if [ "$TRAVIS_BRANCH" == "staging" ]
   then
 
+    configure_aws_cli() {
+    	aws --version
+    	aws configure set default.region us-east-1
+    	aws configure set default.output json
+    	echo "AWS Configured!"
+    }
+
     make_task_def() {
       task_template=$(cat ecs_taskdefinition.json)
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_ACCOUNT_ID)
@@ -27,6 +34,7 @@ then
       register_definition
     }
 
+    configure_aws_cli
     deploy_cluster
 
   fi
