@@ -60,8 +60,4 @@ if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker push $REPO/$NGINX:$TAG
   fi
 
-else
-
-  echo "Skipping deploy since it's a pull request"
-
 fi
