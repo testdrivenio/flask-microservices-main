@@ -1,6 +1,7 @@
 #!/bin/sh
 
-if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]
+then
 
   if [ "$TRAVIS_BRANCH" == "staging" ]
   then
@@ -21,12 +22,9 @@ if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     }
 
     deploy_cluster() {
-
       family="testdriven-staging"
-
       make_task_def
       register_definition
-
     }
 
     deploy_cluster
