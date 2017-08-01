@@ -2,7 +2,7 @@
   "containerDefinitions": [
     {
       "name": "users",
-      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/users:staging",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/flask-microservices-users:staging",
       "essential": true,
       "memoryReservation": 300,
       "cpu": 300,
@@ -11,6 +11,24 @@
           "containerPort": 5000,
           "hostPort": 80,
           "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_SETTINGS",
+          "value": "project.config.StagingConfig"
+        },
+        {
+          "name": "DATABASE_TEST_URL",
+          "value": "postgres://postgres:postgres@users-db:5432/users_test"
+        },
+        {
+          "name": "DATABASE_URL",
+          "value": "postgres://postgres:postgres@users-db:5432/users_staging"
+        },
+        {
+          "name": "SECRET_KEY",
+          "value": "my_precious"
         }
       ],
       "links": [
@@ -26,13 +44,23 @@
     },
     {
       "name": "users-db",
-      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/users-db:staging",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/flask-microservices-users_db:staging",
       "essential": true,
       "memoryReservation": 300,
       "cpu": 300,
       "portMappings": [
         {
           "containerPort": 5432
+        }
+      ],
+      "environment": [
+        {
+          "name": "POSTGRES_PASSWORD",
+          "value": "postgres"
+        },
+        {
+          "name": "POSTGRES_USER",
+          "value": "postgres"
         }
       ],
       "logConfiguration": {

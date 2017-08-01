@@ -26,7 +26,7 @@ then
   if [ "$TRAVIS_BRANCH" == "staging" ]
   then
     export REACT_APP_USERS_SERVICE_URL="TBD"
-    export SECRET_KEY="TBD"
+    export SECRET_KEY="my_precious"
   fi
 
   if [ "$TRAVIS_BRANCH" == "production" ]
