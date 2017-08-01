@@ -1,0 +1,47 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "learn",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/learn:users:staging",
+      "essential": true,
+      "memoryReservation": 300,
+      "cpu": 300,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "links": [
+        "users-db"
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "flask-microservices-staging",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    },
+    {
+      "name": "users-db",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/users-db:staging",
+      "essential": true,
+      "memoryReservation": 300,
+      "cpu": 300,
+      "portMappings": [
+        {
+          "containerPort": 5432
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "flask-microservices-staging",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    }
+  ]
+}
