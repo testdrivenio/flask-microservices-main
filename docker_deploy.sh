@@ -20,8 +20,7 @@ then
     }
 
     register_definition() {
-      if [ revision=$(aws ecs register-task-definition --cli-input-json "$task_def" --family $family) ]
-      then
+      if revision=$(aws ecs register-task-definition --cli-input-json "$task_def" --family $family); then
           echo "Revision: $revision"
       else
           echo "Failed to register task definition"
