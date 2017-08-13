@@ -15,12 +15,6 @@ then
     	echo "AWS Configured!"
     }
 
-    make_task_definition() {
-      task_template=$(cat "ecs/$template")
-      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_ACCOUNT_ID)
-      echo "$task_def"
-    }
-
     register_definition() {
       if revision=$(aws ecs register-task-definition --cli-input-json "$task_def" --family $family | $JQ '.taskDefinition.taskDefinitionArn'); then
         echo "Revision: $revision"
@@ -42,18 +36,22 @@ then
       cluster="flask-microservices-staging-cluster"
 
       # users
-      # family="flask-microservices-users-td"
-    	# service="flask-microservices-users"
-      # template="ecs_users_taskdefinition.json"
-      # make_task_definition
-      # register_definition
-      # update_service
+      family="flask-microservices-users-td"
+    	service="flask-microservices-users"
+      template="ecs_users_taskdefinition.json"
+      task_template=$(cat "ecs/$template")
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_ACCOUNT_ID)
+      echo "$task_def"
+      register_definition
+      update_service
 
       # client
       family="flask-microservices-client-td"
     	service="flask-microservices-client"
       template="ecs_client_taskdefinition.json"
-      make_task_definition
+      task_template=$(cat "ecs/$template")
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
+      echo "$task_def"
       register_definition
       update_service
 
@@ -61,7 +59,9 @@ then
       family="flask-microservices-swagger-td"
     	service="flask-microservices-swagger"
       template="ecs_swagger_taskdefinition.json"
-      make_task_definition
+      task_template=$(cat "ecs/$template")
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
+      echo "$task_def"
       register_definition
       update_service
 
