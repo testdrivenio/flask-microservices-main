@@ -42,12 +42,12 @@ then
       cluster="flask-microservices-staging-cluster"
 
       # users
-      family="flask-microservices-users-td"
-    	service="flask-microservices-users"
-      template="ecs_users_taskdefinition.json"
-      make_task_definition
-      register_definition
-      update_service
+      # family="flask-microservices-users-td"
+    	# service="flask-microservices-users"
+      # template="ecs_users_taskdefinition.json"
+      # make_task_definition
+      # register_definition
+      # update_service
 
       # client
       family="flask-microservices-client-td"
