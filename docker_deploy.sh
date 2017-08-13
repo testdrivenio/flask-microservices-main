@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]
-then
-
-  if [ "$TRAVIS_BRANCH" == "staging" ]
-  then
+# if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]
+# then
+#
+#   if [ "$TRAVIS_BRANCH" == "staging" ]
+#   then
 
     JQ="jq --raw-output --exit-status"
 

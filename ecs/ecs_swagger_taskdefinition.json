@@ -2,7 +2,7 @@
   "containerDefinitions": [
     {
       "name": "swagger",
-      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/flask-microservices-users:staging",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/flask-microservices-swagger:staging",
       "essential": true,
       "memoryReservation": 300,
       "cpu": 300,
