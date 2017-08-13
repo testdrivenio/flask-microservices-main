@@ -15,8 +15,8 @@ then
     	echo "AWS Configured!"
     }
 
-    make_task_def() {
-      task_template=$(cat ecs_taskdefinition.json)
+    make_task_definition() {
+      task_template=$(cat "$template")
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_ACCOUNT_ID)
       echo "$task_def"
     }
@@ -30,19 +30,40 @@ then
       fi
     }
 
-    deploy_cluster() {
-
-      family="testdriven-staging"
-      cluster="flask-microservices-staging"
-    	service="flask-microservices-staging"
-
-      make_task_def
-      register_definition
-
+    update service() {
       if [[ $(aws ecs update-service --cluster $cluster --service $service --task-definition $revision | $JQ '.service.taskDefinition') != $revision ]]; then
         echo "Error updating service."
         return 1
       fi
+    }
+
+    deploy_cluster() {
+
+      cluster="flask-microservices-staging-cluster"
+
+      # users
+      family="flask-microservices-users-td"
+    	service="flask-microservices-users"
+      template="ecs_users_taskdefinition.json"
+      make_task_definition
+      register_definition
+      update_service
+
+      # client
+      family="flask-microservices-client-td"
+    	service="flask-microservices-client"
+      template="ecs_client_taskdefinition.json"
+      make_task_definition
+      register_definition
+      update_service
+
+      # swagger
+      family="flask-microservices-swagger-td"
+    	service="flask-microservices-swagger"
+      template="ecs_swagger_taskdefinition.json"
+      make_task_definition
+      register_definition
+      update_service
 
     }
 
