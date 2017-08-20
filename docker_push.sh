@@ -41,7 +41,12 @@ then
      [ "$TRAVIS_BRANCH" == "production" ]
   then
     # users
-    docker build $USERS_REPO -t $USERS:$COMMIT
+    if [ "$TRAVIS_BRANCH" == "production" ]
+    then
+      docker build $USERS_REPO -t $USERS:$COMMIT -f Dockerfile-prod
+    else
+      docker build $USERS_REPO -t $USERS:$COMMIT
+    fi
     docker tag $USERS:$COMMIT $REPO/$USERS:$TAG
     docker push $REPO/$USERS:$TAG
     # users db
