@@ -56,4 +56,5 @@ after_script:
   - docker-compose down
 
 after_success:
+  - bash ./docker_push.sh
   - bash ./docker_deploy.sh

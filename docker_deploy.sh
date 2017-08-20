@@ -1,59 +1,75 @@
 #!/bin/sh
 
-if [ "$TRAVIS_BRANCH" == "development" ]
+if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]
 then
-  docker login -e $DOCKER_EMAIL -u $DOCKER_ID -p $DOCKER_PASSWORD
-  export TAG=$TRAVIS_BRANCH
-  export REPO=$DOCKER_ID
-fi
 
-if [ "$TRAVIS_BRANCH" == "staging" ] || \
-   [ "$TRAVIS_BRANCH" == "production" ]
-then
-  curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-  unzip awscli-bundle.zip
-  ./awscli-bundle/install -b ~/bin/aws
-  export PATH=~/bin:$PATH
-  # add AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY env vars
-  eval $(aws ecr get-login --region us-east-1)
-  export TAG=$TRAVIS_BRANCH
-  export REPO=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
-fi
+  if [ "$TRAVIS_BRANCH" == "staging" ]
+  then
 
-if [ "$TRAVIS_BRANCH" == "staging" ]
-then
-  export REACT_APP_USERS_SERVICE_URL="TBD"
-  export SECRET_KEY="TBD"
-fi
+    JQ="jq --raw-output --exit-status"
 
-if [ "$TRAVIS_BRANCH" == "production" ]
-then
-  export REACT_APP_USERS_SERVICE_URL="TBD"
-  export SECRET_KEY="TBD"
-fi
+    configure_aws_cli() {
+    	aws --version
+    	aws configure set default.region us-east-1
+    	aws configure set default.output json
+    	echo "AWS Configured!"
+    }
 
-if [ "$TRAVIS_BRANCH" == "development" ] || \
-   [ "$TRAVIS_BRANCH" == "staging" ] || \
-   [ "$TRAVIS_BRANCH" == "production" ]
-then
-  # users
-  docker build $USERS_REPO -t $USERS:$COMMIT
-  docker tag $USERS:$COMMIT $REPO/$USERS:$TAG
-  docker push $REPO/$USERS:$TAG
-  # users db
-  docker build $USERS_DB_REPO -t $USERS_DB:$COMMIT
-  docker tag $USERS_DB:$COMMIT $REPO/$USERS_DB:$TAG
-  docker push $REPO/$USERS_DB:$TAG
-  # client
-  docker build $CLIENT_REPO -t $CLIENT:$COMMIT
-  docker tag $CLIENT:$COMMIT $REPO/$CLIENT:$TAG
-  docker push $REPO/$CLIENT:$TAG
-  # swagger
-  docker build $SWAGGER_REPO -t $SWAGGER:$COMMIT
-  docker tag $SWAGGER:$COMMIT $REPO/$SWAGGER:$TAG
-  docker push $REPO/$SWAGGER:$TAG
-  # nginx
-  docker build $NGINX_REPO -t $NGINX:$COMMIT
-  docker tag $NGINX:$COMMIT $REPO/$NGINX:$TAG
-  docker push $REPO/$NGINX:$TAG
+    register_definition() {
+      if revision=$(aws ecs register-task-definition --cli-input-json "$task_def" --family $family | $JQ '.taskDefinition.taskDefinitionArn'); then
+        echo "Revision: $revision"
+      else
+        echo "Failed to register task definition"
+        return 1
+      fi
+    }
+
+    update_service() {
+      if [[ $(aws ecs update-service --cluster $cluster --service $service --task-definition $revision | $JQ '.service.taskDefinition') != $revision ]]; then
+        echo "Error updating service."
+        return 1
+      fi
+    }
+
+    deploy_cluster() {
+
+      cluster="flask-microservices-staging-cluster"
+
+      # users
+      family="flask-microservices-users-td"
+    	service="flask-microservices-users"
+      template="ecs_users_taskdefinition.json"
+      task_template=$(cat "ecs/$template")
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_ACCOUNT_ID)
+      echo "$task_def"
+      register_definition
+      update_service
+
+      # client
+      family="flask-microservices-client-td"
+    	service="flask-microservices-client"
+      template="ecs_client_taskdefinition.json"
+      task_template=$(cat "ecs/$template")
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
+      echo "$task_def"
+      register_definition
+      update_service
+
+      # swagger
+      family="flask-microservices-swagger-td"
+    	service="flask-microservices-swagger"
+      template="ecs_swagger_taskdefinition.json"
+      task_template=$(cat "ecs/$template")
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
+      echo "$task_def"
+      register_definition
+      update_service
+
+    }
+
+    configure_aws_cli
+    deploy_cluster
+
+  fi
+
 fi
