@@ -31,7 +31,7 @@ then
 
   if [ "$TRAVIS_BRANCH" == "production" ]
   then
-    export REACT_APP_USERS_SERVICE_URL="TBD"
+    export REACT_APP_USERS_SERVICE_URL="http://flask-microservices-prod-alb-814316018.us-east-1.elb.amazonaws.com"
     export DATABASE_URL="$AWS_RDS_URI"
     export SECRET_KEY="$PRODUCTION_SECRET_KEY"
   fi
