@@ -32,7 +32,8 @@ then
   if [ "$TRAVIS_BRANCH" == "production" ]
   then
     export REACT_APP_USERS_SERVICE_URL="TBD"
-    export SECRET_KEY="TBD"
+    export DATABASE_URL="$AWS_RDS_URI"
+    export SECRET_KEY="$PRODUCTION_SECRET_KEY"
   fi
 
   if [ "$TRAVIS_BRANCH" == "development" ] || \
