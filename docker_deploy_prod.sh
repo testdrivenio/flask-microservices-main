@@ -33,7 +33,7 @@ then
 
     deploy_cluster() {
 
-      cluster="flask-microservices-staging-cluster"
+      cluster="flask-microservices-prod-cluster"
 
       # users
       family="flask-microservices-users-prod-td"
