@@ -16,7 +16,7 @@
       "environment": [
         {
           "name": "API_URL",
-          "value": "https://raw.githubusercontent.com/realpython/flask-microservices-swagger/master/swagger.json"
+          "value": "https://raw.githubusercontent.com/realpython/flask-microservices-swagger/master/swagger-prod.json"
         }
       ],
       "logConfiguration": {
