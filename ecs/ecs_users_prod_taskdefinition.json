@@ -19,6 +19,10 @@
           "value": "project.config.ProductionConfig"
         },
         {
+          "name": "DATABASE_URL",
+          "value": "%s"
+        },
+        {
           "name": "SECRET_KEY",
           "value": "%s"
         }
