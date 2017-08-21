@@ -40,7 +40,7 @@ then
     	service="flask-microservices-prod-users"
       template="ecs_users_prod_taskdefinition.json"
       task_template=$(cat "ecs/$template")
-      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $PRODUCTION_SECRET_KEY)
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $PRODUCTION_SECRET_KEY $AWS_RDS_URI)
       echo "$task_def"
       register_definition
       update_service
