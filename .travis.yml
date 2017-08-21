@@ -58,4 +58,3 @@ after_script:
 after_success:
   - bash ./docker_push.sh
   - bash ./docker_deploy.sh
-  - bash ./docker_deploy_prod.sh
