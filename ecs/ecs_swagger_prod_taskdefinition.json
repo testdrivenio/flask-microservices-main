@@ -1,0 +1,31 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "swagger-prod",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/flask-microservices-swagger:production",
+      "essential": true,
+      "memoryReservation": 300,
+      "cpu": 300,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 0,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "API_URL",
+          "value": "https://raw.githubusercontent.com/realpython/flask-microservices-swagger/master/swagger-prod.json"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "flask-microservices-production",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    }
+  ]
+}

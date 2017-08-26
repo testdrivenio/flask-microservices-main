@@ -1,6 +1,7 @@
 #!/bin/sh
 
-if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]
+then
 
   if [ "$TRAVIS_BRANCH" == "development" ]
   then
@@ -16,7 +17,7 @@ if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     unzip awscli-bundle.zip
     ./awscli-bundle/install -b ~/bin/aws
     export PATH=~/bin:$PATH
-    # add AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY env vars
+    # add AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY environment vars
     eval $(aws ecr get-login --region us-east-1)
     export TAG=$TRAVIS_BRANCH
     export REPO=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
@@ -24,14 +25,15 @@ if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 
   if [ "$TRAVIS_BRANCH" == "staging" ]
   then
-    export REACT_APP_USERS_SERVICE_URL="TBD"
-    export SECRET_KEY="TBD"
+    export REACT_APP_USERS_SERVICE_URL="http://flask-microservices-staging-alb-1366920567.us-east-1.elb.amazonaws.com"
+    export SECRET_KEY="my_precious"
   fi
 
   if [ "$TRAVIS_BRANCH" == "production" ]
   then
-    export REACT_APP_USERS_SERVICE_URL="TBD"
-    export SECRET_KEY="TBD"
+    export REACT_APP_USERS_SERVICE_URL="http://flask-microservices-prod-alb-814316018.us-east-1.elb.amazonaws.com"
+    export DATABASE_URL="$AWS_RDS_URI"
+    export SECRET_KEY="$PRODUCTION_SECRET_KEY"
   fi
 
   if [ "$TRAVIS_BRANCH" == "development" ] || \
@@ -39,7 +41,12 @@ if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
      [ "$TRAVIS_BRANCH" == "production" ]
   then
     # users
-    docker build $USERS_REPO -t $USERS:$COMMIT
+    if [ "$TRAVIS_BRANCH" == "production" ]
+    then
+      docker build $USERS_REPO -t $USERS:$COMMIT -f Dockerfile-prod
+    else
+      docker build $USERS_REPO -t $USERS:$COMMIT
+    fi
     docker tag $USERS:$COMMIT $REPO/$USERS:$TAG
     docker push $REPO/$USERS:$TAG
     # users db
