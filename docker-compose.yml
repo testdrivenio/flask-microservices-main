@@ -79,3 +79,21 @@ services:
     depends_on:
       users-service:
         condition: service_started
+
+  eval-service:
+    container_name: eval-service
+    build:
+      context: ../flask-microservices-eval
+      dockerfile: Dockerfile-local
+    volumes:
+      - '../flask-microservices-eval:/usr/src/app'
+    ports:
+      - 5002:5000 # expose ports - HOST:CONTAINER
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - USERS_SERVICE_URL=http://users-service:5000
+    depends_on:
+      users-service:
+        condition: service_started
+    links:
+      - users-service
