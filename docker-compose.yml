@@ -92,8 +92,25 @@ services:
     environment:
       - APP_SETTINGS=project.config.DevelopmentConfig
       - USERS_SERVICE_URL=http://users-service:5000
+      - DATABASE_URL=postgres://postgres:postgres@eval-db:5432/eval_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@eval-db:5432/eval_test
     depends_on:
       users-service:
         condition: service_started
+      eval-db:
+        condition: service_healthy
     links:
       - users-service
+      - eval-db
+
+  eval-db:
+    container_name: eval-db
+    build:
+      context: ../flask-microservices-eval/project/db
+    ports:
+        - 5436:5432  # expose ports - HOST:CONTAINER
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
