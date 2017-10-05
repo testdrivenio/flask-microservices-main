@@ -1,0 +1,75 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "eval-service",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/flask-microservices-eval:staging",
+      "essential": true,
+      "memoryReservation": 300,
+      "cpu": 300,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 0,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_SETTINGS",
+          "value": "project.config.StagingConfig"
+        },
+        {
+          "name": "DATABASE_TEST_URL",
+          "value": "postgres://postgres:postgres@eval-db:5432/eval_test"
+        },
+        {
+          "name": "DATABASE_URL",
+          "value": "postgres://postgres:postgres@eval-db:5432/eval_staging"
+        },
+        {
+          "name": "USERS_SERVICE_URL",
+          "value": "http://flask-microservices-staging-alb-1366920567.us-east-1.elb.amazonaws.com"
+        }
+      ],
+      "links": [
+        "eval-db"
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "flask-microservices-staging",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    },
+    {
+      "name": "eval-db",
+      "image": "%s.dkr.ecr.us-east-1.amazonaws.com\/flask-microservices-eval_db:staging",
+      "essential": true,
+      "memoryReservation": 300,
+      "cpu": 300,
+      "portMappings": [
+        {
+          "containerPort": 5432
+        }
+      ],
+      "environment": [
+        {
+          "name": "POSTGRES_PASSWORD",
+          "value": "postgres"
+        },
+        {
+          "name": "POSTGRES_USER",
+          "value": "postgres"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "flask-microservices-staging",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    }
+  ]
+}

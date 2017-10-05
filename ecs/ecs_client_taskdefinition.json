@@ -21,6 +21,10 @@
         {
           "name": "REACT_APP_USERS_SERVICE_URL",
           "value": "http://flask-microservices-staging-alb-1366920567.us-east-1.elb.amazonaws.com"
+        },
+        {
+          "name": "REACT_APP_EVAL_SERVICE_URL",
+          "value": "http://flask-microservices-staging-alb-1366920567.us-east-1.elb.amazonaws.com"
         }
       ],
       "logConfiguration": {

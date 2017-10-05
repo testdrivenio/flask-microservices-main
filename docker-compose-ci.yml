@@ -55,7 +55,6 @@ services:
         - NODE_ENV=development
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
         - REACT_APP_EVAL_SERVICE_URL=${REACT_APP_EVAL_SERVICE_URL}
-        - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
     ports:
       - '9000:9000' # expose ports - HOST:CONTAINER
     depends_on:
@@ -84,9 +83,9 @@ services:
       - 5002:5000 # expose ports - HOST:CONTAINER
     environment:
       - APP_SETTINGS=project.config.StagingConfig
+      - USERS_SERVICE_URL=http://users-service:5000
       - DATABASE_URL=postgres://postgres:postgres@eval-db:5432/eval_staging
       - DATABASE_TEST_URL=postgres://postgres:postgres@eval-db:5432/eval_test
-      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       users-service:
         condition: service_started

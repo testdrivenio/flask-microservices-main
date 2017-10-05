@@ -37,8 +37,18 @@ then
 
       # users
       family="flask-microservices-users-td"
-    	service="flask-microservices-users"
+    	service="flask-microservices-staging-users"
       template="ecs_users_taskdefinition.json"
+      task_template=$(cat "ecs/$template")
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_ACCOUNT_ID)
+      echo "$task_def"
+      register_definition
+      update_service
+
+      # eval
+      family="flask-microservices-eval-td"
+    	service="flask-microservices-staging-eval"
+      template="ecs_eval_taskdefinition.json"
       task_template=$(cat "ecs/$template")
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_ACCOUNT_ID)
       echo "$task_def"
@@ -47,7 +57,7 @@ then
 
       # client
       family="flask-microservices-client-td"
-    	service="flask-microservices-client"
+    	service="flask-microservices-staging-client"
       template="ecs_client_taskdefinition.json"
       task_template=$(cat "ecs/$template")
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
@@ -57,7 +67,7 @@ then
 
       # swagger
       family="flask-microservices-swagger-td"
-    	service="flask-microservices-swagger"
+    	service="flask-microservices-staging-swagger"
       template="ecs_swagger_taskdefinition.json"
       task_template=$(cat "ecs/$template")
       task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)

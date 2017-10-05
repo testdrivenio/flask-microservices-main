@@ -7,6 +7,8 @@ if [ "$TRAVIS_BRANCH" == "development" ]; then
   docker pull $DOCKER_ID/$CLIENT
   docker pull $DOCKER_ID/$SWAGGER
   docker pull $DOCKER_ID/$NGINX
+  docker pull $DOCKER_ID/$EVAL
+  docker pull $DOCKER_ID/$EVAL_DB
 fi
 
 docker-compose -f docker-compose-ci.yml up -d --build
