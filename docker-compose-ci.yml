@@ -54,6 +54,9 @@ services:
       args:
         - NODE_ENV=development
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+        - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+        - REACT_APP_EVAL_SERVICE_URL=${REACT_APP_EVAL_SERVICE_URL}
+        - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
     ports:
       - '9000:9000' # expose ports - HOST:CONTAINER
     depends_on:
@@ -73,3 +76,36 @@ services:
     depends_on:
       users-service:
         condition: service_started
+
+  eval-service:
+    container_name: eval-service
+    build:
+      context: https://github.com/realpython/flask-microservices-eval.git
+    expose:
+      - 5002:5000 # expose ports - HOST:CONTAINER
+    environment:
+      - APP_SETTINGS=project.config.StagingConfig
+      - DATABASE_URL=postgres://postgres:postgres@eval-db:5432/eval_staging
+      - DATABASE_TEST_URL=postgres://postgres:postgres@eval-db:5432/eval_test
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      users-service:
+        condition: service_started
+      eval-db:
+        condition: service_healthy
+    links:
+      - users-service
+      - eval-db
+    command: gunicorn -b 0.0.0.0:5000 manage:app
+
+  eval-db:
+    container_name: eval-db
+    build:
+      context: https://github.com/realpython/flask-microservices-eval.git#master:project/db
+    ports:
+        - 5436:5432  # expose ports - HOST:CONTAINER
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0

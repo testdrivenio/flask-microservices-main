@@ -29,6 +29,8 @@ env:
     - CLIENT_REPO=https://github.com/realpython/$CLIENT.git
     - SWAGGER=flask-microservices-swagger
     - SWAGGER_REPO=https://github.com/realpython/$SWAGGER.git
+    - EVAL=flask-microservices-eval
+    - EVAL_REPO=https://github.com/realpython/$EVAL.git
     - NGINX=flask-microservices-nginx
     - NGINX_REPO=https://github.com/realpython/flask-microservices-main.git#master:nginx
 
@@ -41,6 +43,8 @@ before_install:
 before_script:
   - export TEST_URL=http://127.0.0.1
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
+  - export REACT_APP_EVAL_SERVICE_URL=http://127.0.0.1
+  - export REACT_APP_API_GATEWAY_URL=https://c0rue3ifh4.execute-api.us-east-1.amazonaws.com/v1/execute
   - export SECRET_KEY=my_precious
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
@@ -50,6 +54,8 @@ before_script:
 script:
   - docker-compose -f docker-compose-ci.yml run users-service python manage.py test
   - docker-compose -f docker-compose-ci.yml run users-service python manage.py recreate_db
+  - docker-compose -f docker-compose-ci.yml run eval-service python manage.py test
+  - docker-compose -f docker-compose-ci.yml run eval-service python manage.py recreate_db
   - testcafe chrome e2e
 
 after_script:
