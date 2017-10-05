@@ -54,7 +54,6 @@ services:
       args:
         - NODE_ENV=development
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
-        - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
         - REACT_APP_EVAL_SERVICE_URL=${REACT_APP_EVAL_SERVICE_URL}
         - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
     ports:
@@ -81,7 +80,7 @@ services:
     container_name: eval-service
     build:
       context: https://github.com/realpython/flask-microservices-eval.git
-    expose:
+    ports:
       - 5002:5000 # expose ports - HOST:CONTAINER
     environment:
       - APP_SETTINGS=project.config.StagingConfig
