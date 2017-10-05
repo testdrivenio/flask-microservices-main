@@ -18,7 +18,7 @@ test(`should display the sign in form`, async (t) => {
     .expect(Selector('input[disabled]').exists).ok()
     .expect(Selector('.validation-list').exists).ok()
     .expect(Selector('.validation-list > .error').nth(0).withText(
-      'Email must be greater than 5 characters.').exists).ok()
+      'Email is required.').exists).ok()
 });
 
 test(`should validate the password field`, async (t) => {
@@ -27,17 +27,14 @@ test(`should validate the password field`, async (t) => {
     .expect(Selector('H1').withText('Login').exists).ok()
     .expect(Selector('form').exists).ok()
     .expect(Selector('input[disabled]').exists).ok()
-    .expect(Selector('.validation-list > .error').nth(2).withText(
-      'Password must be greater than 10 characters.').exists).ok()
-    .typeText('input[name="password"]', 'greaterthanten')
+    .expect(Selector('.validation-list > .error').nth(1).withText(
+      'Password is required.').exists).ok()
+    .typeText('input[name="password"]', 'something')
     .expect(Selector('.validation-list').exists).ok()
-    .expect(Selector('.validation-list > .error').nth(2).withText(
-      'Password must be greater than 10 characters.').exists).notOk()
+    .expect(Selector('.validation-list > .error').nth(1).withText(
+      'Password is required.').exists).notOk()
     .expect(Selector('.validation-list > .success').nth(0).withText(
-      'Password must be greater than 10 characters.').exists).ok()
-    .click(Selector('a').withText('Register'))
-    .expect(Selector('.validation-list > .error').nth(3).withText(
-      'Password must be greater than 10 characters.').exists).ok()
+      'Password is required.').exists).ok()
 });
 
 test(`should allow a user to sign in`, async (t) => {
@@ -62,9 +59,12 @@ test(`should allow a user to sign in`, async (t) => {
     .click(Selector('input[type="submit"]'))
 
   // assert user is redirected to '/'
-  // assert '/' is displayed properly
+  // assert '/all-users' is displayed properly
   const tableRow = Selector('td').withText(username).parent();
   await t
+    .expect(Selector('H1').withText('Exercises').exists).ok()
+    .expect(Selector('.alert-success').withText('Welcome!').exists).ok()
+    .navigateTo(`${TEST_URL}/all-users`)
     .expect(Selector('H1').withText('All Users').exists).ok()
     .expect(tableRow.child().withText(username).exists).ok()
     .expect(tableRow.child().withText(email).exists).ok()
@@ -72,7 +72,6 @@ test(`should allow a user to sign in`, async (t) => {
     .expect(Selector('a').withText('Log Out').exists).ok()
     .expect(Selector('a').withText('Register').exists).notOk()
     .expect(Selector('a').withText('Log In').exists).notOk()
-    .expect(Selector('.alert-success').withText('Welcome!').exists).ok()
 
   // log a user out
   await t
