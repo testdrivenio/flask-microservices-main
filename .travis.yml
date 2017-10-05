@@ -31,6 +31,8 @@ env:
     - SWAGGER_REPO=https://github.com/realpython/$SWAGGER.git
     - EVAL=flask-microservices-eval
     - EVAL_REPO=https://github.com/realpython/$EVAL.git
+    - EVAL_DB=flask-microservices-eval_db
+    - EVAL_DB_REPO=https://github.com/realpython/$EVAL.git#master:project/db
     - NGINX=flask-microservices-nginx
     - NGINX_REPO=https://github.com/realpython/flask-microservices-main.git#master:nginx
 
