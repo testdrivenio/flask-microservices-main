@@ -53,6 +53,19 @@ then
     docker build $USERS_DB_REPO -t $USERS_DB:$COMMIT
     docker tag $USERS_DB:$COMMIT $REPO/$USERS_DB:$TAG
     docker push $REPO/$USERS_DB:$TAG
+    # eval
+    if [ "$TRAVIS_BRANCH" == "production" ]
+    then
+      docker build $EVAL_REPO -t $EVAL:$COMMIT -f Dockerfile-prod
+    else
+      docker build $EVAL_REPO -t $EVAL:$COMMIT
+    fi
+    docker tag $EVAL:$COMMIT $REPO/$EVAL:$TAG
+    docker push $REPO/$EVAL:$TAG
+    # eval db
+    docker build $EVAL_DB_REPO -t $EVAL_DB:$COMMIT
+    docker tag $EVAL_DB:$COMMIT $REPO/$EVAL_DB:$TAG
+    docker push $REPO/$EVAL_DB:$TAG
     # client
     docker build $CLIENT_REPO -t $CLIENT:$COMMIT
     docker tag $CLIENT:$COMMIT $REPO/$CLIENT:$TAG
