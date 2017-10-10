@@ -23,7 +23,7 @@
           "value": "%s"
         },
         {
-          "name": "SECRET_KEY",
+          "name": "USERS_SERVICE_URL",
           "value": "%s"
         }
       ],
