@@ -50,7 +50,7 @@ then
       service="flask-microservices-prod-eval"
       template="ecs_eval_prod_taskdefinition.json"
       task_template=$(cat "ecs/$template")
-      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_URI $PRODUCTION_SECRET_KEY)
+      task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_EVAL_URI $PRODUCTION_URI)
       echo "$task_def"
       register_definition
       update_service
