@@ -58,7 +58,7 @@ before_script:
   - docker-compose -f docker-compose-ci.yml run eval-service python manage.py test
   - docker-compose -f docker-compose-ci.yml run eval-service python manage.py recreate_db
   - docker-compose -f docker-compose-ci.yml run eval-service python manage.py seed_db
-  - testcafe chrome e2e
+  # - testcafe chrome e2e
 
 after_script:
   - docker-compose down
